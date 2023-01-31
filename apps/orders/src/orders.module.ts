@@ -1,0 +1,26 @@
+import { DatabaseModule } from '@app/common';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import * as Joi from 'joi';
+import { OrdersController } from './orders.controller';
+import { OrdersRepository } from './orders.repository';
+import { OrdersService } from './orders.service';
+import { Orders, OrderSchema } from './schemas/orders.schema';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        MONGODB_URI: Joi.string().required(),
+      }),
+      envFilePath: './apps/orders/.env',
+    }),
+    DatabaseModule,
+    MongooseModule.forFeature([{ name: Orders.name, schema: OrderSchema }]),
+  ],
+  controllers: [OrdersController],
+  providers: [OrdersService, OrdersRepository],
+})
+export class OrdersModule {}
