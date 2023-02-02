@@ -14,7 +14,7 @@ export class OrdersService {
   async createOrder(request: CreateOrderRequest) {
     const session = await this.ordersRepository.startTransaction();
     try {
-      const orders = await this.ordersRepository.create(request, { session });
+      const orders = await this.ordersRepository.create(request);
       await lastValueFrom(
         this.billingClient.emit('order_created', {
           request,
