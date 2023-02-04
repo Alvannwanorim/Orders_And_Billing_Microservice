@@ -3,10 +3,12 @@ import * as bcrypt from 'bcrypt';
 import { UsersRepository } from './users.repository';
 import { User } from './schema/users.schema';
 import {
+  Injectable,
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 
+@Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
@@ -25,10 +27,12 @@ export class UsersService {
     try {
       user = await this.usersRepository.findOne({ email: request.email });
     } catch (err) {}
+
     if (user) throw new UnprocessableEntityException('Email already exists');
   }
 
   async validateUser(email: string, password: string) {
+    console.log(email);
     const user = await this.usersRepository.findOne({ email });
     const passwordIsValid = await bcrypt.compare(password, user.password);
     if (!passwordIsValid) {

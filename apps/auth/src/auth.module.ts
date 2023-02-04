@@ -11,9 +11,6 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    DatabaseModule,
-    UsersModule,
-    RmqModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -23,11 +20,14 @@ import { UsersModule } from './users/users.module';
       }),
       envFilePath: './apps/auth/.env',
     }),
+    DatabaseModule,
+    UsersModule,
+    RmqModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: `${configService.get('JWT_EXPIRATION')}`,
+          expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
         },
       }),
       inject: [ConfigService],
