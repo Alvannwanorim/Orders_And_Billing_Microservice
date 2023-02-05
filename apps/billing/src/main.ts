@@ -7,6 +7,6 @@ async function bootstrap() {
   const rmqService = app.get<RmqService>(RmqService);
   app.connectMicroservice(rmqService.getOptions('BILLING'));
   app.startAllMicroservices();
-  await app.listen(3001);
+  await app.listen(3002);
 }
 bootstrap();
